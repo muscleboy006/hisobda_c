@@ -10,7 +10,8 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  const API_URL = 'http://localhost:7000/tg';
+  // const API_URL = 'http://localhost:7000/tg';
+  const API_URL = 'https://hisobda.tw1.su';
   
   useEffect(() => {
     // Проверяем, есть ли сохраненный токен
