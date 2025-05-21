@@ -227,7 +227,7 @@ const ProfilePage = () => {
           </CardHeader>
           <CardContent>
               Savol va takliflaringiz bolsa yozishingiz mumkun. <br />
-              Telegram: <a href="https://t.me/hisobda_app" className='underline text-blue-500'>@abdurahmonxamro</a>
+              Telegram: <a href="https://t.me/hisobda_app" className='underline text-blue-500'>@hisobda_app</a>
           </CardContent>
         </Card>
       </div>
