@@ -181,25 +181,24 @@ const ProfilePage = () => {
       {!access && premiumEndsAt && formatPremiumEndDate(premiumEndsAt) && (
         <Card className="w-full max-w-md mb-4">
           <CardHeader>
-            <CardTitle className="text-sm font-medium">Sinov muddati</CardTitle>
+            <CardTitle className="text-sm font-medium">Premium muddat</CardTitle>
           </CardHeader>
           <CardContent>
             <p className={isPremiumEnded ? "text-sm text-red-600" : "text-sm text-gray-600"}>
               {isPremiumEnded
-                ? `Sizning sinov muddatingiz ${formatPremiumEndDate(premiumEndsAt)} da tugagan`
-                : `Sizning sinov muddatingiz ${formatPremiumEndDate(premiumEndsAt)} da tugaydi`}
+                ? `Sizning premium muddatingiz ${formatPremiumEndDate(premiumEndsAt)} da tugagan`
+                : `Sizning premium muddatingiz ${formatPremiumEndDate(premiumEndsAt)} da tugaydi`}
             </p>
           </CardContent>
         </Card>
       )}
-
 
       {/* Место для дополнительных элементов */}
       <div className="w-full max-w-md space-y-2">
         {/* Здесь вы можете добавить дополнительные карточки или компоненты */}
         <Card className="w-full max-w-md mb-1">
         <CardHeader>
-            <CardTitle className="text-sm font-medium">Dasturchi haqida</CardTitle>
+            <CardTitle className="text-sm font-medium">Ilova haqida</CardTitle>
           </CardHeader>
           <CardContent>
               Savol va takliflaringiz bolsa yozishingiz mumkun. <br />

@@ -66,7 +66,7 @@ const AccessWrapper = () => {
       </div>
       {!isPremium && (
         <div className="absolute inset-0 flex flex-col items-center justify-center z-50 bg-white/70 backdrop-blur-sm px-4 text-center">
-          <h2 className="text-xl font-semibold mb-2">Sinov muddati tugadi</h2>
+          <h2 className="text-xl font-semibold mb-2">premium muddati tugadi</h2>
           <p className="text-sm text-muted-foreground mb-4">
             Ilovadan foydalanishni davom etirish uchun premium oling.
           </p>

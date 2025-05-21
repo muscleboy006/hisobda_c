@@ -465,7 +465,7 @@ const DebtView = () => {
           
           {!isPremium && (
             <div className="bg-amber-100 border border-amber-300 text-amber-800 rounded-lg p-3 my-2">
-              <p className="text-sm font-medium">Sizning sinov muddatingiz tugagan.</p>
+              <p className="text-sm font-medium">Sizning premium muddatingiz tugagan.</p>
               <p className="text-xs">Qarzlarni o'chirish yoki qo'shish uchun premium hisob oling</p>
             </div>
           )}
