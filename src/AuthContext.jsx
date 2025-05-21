@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import api from './Utils/api';
 
 const AuthContext = createContext();
 
@@ -10,8 +11,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // const API_URL = 'http://localhost:7000/tg';
-  const API_URL = 'https://hisobda.tw1.su';
   
   useEffect(() => {
     // Проверяем, есть ли сохраненный токен
@@ -47,7 +46,7 @@ export const AuthProvider = ({ children }) => {
   // Получение данных пользователя по токену
   const fetchUserProfile = async (token) => {
     try {
-      const response = await axios.get(`${API_URL}/user/profile`, {
+      const response = await axios.get(`${api}/tg/user/profile`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -74,7 +73,7 @@ export const AuthProvider = ({ children }) => {
     console.log('Processing Telegram auth data:', telegramData);
     
     try {
-      const response = await axios.post(`${API_URL}/auth/telegram`, telegramData);
+      const response = await axios.post(`${api}/auth/telegram`, telegramData);
       
       if (response.data.success) {
         const { user, token, walletId } = response.data;
