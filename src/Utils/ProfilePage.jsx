@@ -129,7 +129,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-gray-100 p-4">
+    <div className="flex min-h-screen flex-col items-center bg-white p-4">
       {/* Карточка профиля */}
       <Card className="w-full max-w-md mb-4">
         <CardContent className="flex items-center justify-between py-2 px-3">
