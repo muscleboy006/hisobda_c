@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
     console.log('Processing Telegram auth data:', telegramData);
     
     try {
-      const response = await axios.post(`${api}/auth/telegram`, telegramData);
+      const response = await axios.post(`${api}/tg/auth/telegram`, telegramData);
       
       if (response.data.success) {
         const { user, token, walletId } = response.data;
