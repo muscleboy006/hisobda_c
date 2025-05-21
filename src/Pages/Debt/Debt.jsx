@@ -323,6 +323,7 @@ const DebtView = () => {
   }, [allDebts, page, statusFilter, createRequestUrl, formatDebtData, filterDebts, navigate, fetchDebtStats]);
 
   const handleDeleteDebt = async (id) => {
+    
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
@@ -463,7 +464,7 @@ const DebtView = () => {
             </Badge>
           </div>
           
-          {!isPremium && (
+          {!isPremium && !accessLoading && (
             <div className="bg-amber-100 border border-amber-300 text-amber-800 rounded-lg p-3 my-2">
               <p className="text-sm font-medium">Sizning premium muddatingiz tugagan.</p>
               <p className="text-xs">Qarzlarni o'chirish yoki qo'shish uchun premium hisob oling</p>

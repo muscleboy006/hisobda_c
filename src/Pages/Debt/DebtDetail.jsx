@@ -19,7 +19,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Input } from '@/components/ui/input';
 import axios from 'axios';
 import api from '@/Utils/api';
-import { useAccessStatus } from '@/Utils/useAccessStatus';
+import { fetchAccess, useAccessStatus } from '@/Utils/useAccessStatus';
 
 const DEBT_STATUS = {
   paid: 'Tolangan',
@@ -118,6 +118,8 @@ const DebtDetailView = () => {
 
   // Обработчик добавления погашения
   const handleAddPayment = async (e) => {
+    localStorage.removeItem("isPremium")
+    const { isPremium } = await fetchAccess();
     e.preventDefault();
     
     if (!isPremium) return; // Prevent adding payment if no premium access
@@ -162,7 +164,9 @@ const DebtDetailView = () => {
   };
 
   // Открыть диалог подтверждения удаления платежа
-  const openDeletePaymentConfirm = (payment) => {
+  const openDeletePaymentConfirm = async (payment) => {
+    localStorage.removeItem("isPremium")
+    const { isPremium } = await fetchAccess();
     if (!isPremium) return; // Prevent opening delete dialog if no premium access
     setPaymentToDelete(payment);
     setIsDeletePaymentConfirmOpen(true);
@@ -170,6 +174,8 @@ const DebtDetailView = () => {
 
   // Удаление платежа
   const handleDeletePayment = async () => {
+    localStorage.removeItem("isPremium")
+    const { isPremium } = await fetchAccess();
     if (!isPremium || !paymentToDelete) return; // Prevent deletion if no premium access
     
     try {
@@ -195,6 +201,8 @@ const DebtDetailView = () => {
 
   // Удаление долга
   const handleDeleteDebt = async () => {
+    localStorage.removeItem("isPremium")
+    const { isPremium } = await fetchAccess();
     if (!isPremium) return; // Prevent deletion if no premium access
     
     try {
@@ -345,7 +353,7 @@ const DebtDetailView = () => {
             </Button>
           </div>
 
-          {!isPremium && (
+          {!isPremium && !accessLoading && (
             <div className="bg-amber-100 border border-amber-300 text-amber-800 rounded-lg p-3 mb-4">
               <p className="text-sm font-medium">Sizning premium muddatingiz tugagan.</p>
               <p className="text-xs">Qarzlarni o'chirish yoki qo'shish uchun premium hisob oling</p>

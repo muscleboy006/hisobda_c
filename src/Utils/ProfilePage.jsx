@@ -33,7 +33,6 @@ const ProfilePage = () => {
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
   console.log(premiumEndsAt);
-  
 
   // Перенаправляем неавторизованных пользователей
   useEffect(() => {
@@ -44,11 +43,12 @@ const ProfilePage = () => {
 
   if (loading || accessLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+      <div className="flex gap-2 min-h-screen justify-center bg-gray-100 p-4">
+        <div className="flex flex-col gap-4">
         <Card className="w-full max-w-md">
           <CardContent className="flex items-center justify-between py-2 px-3">
             <div className="flex items-center gap-3">
-              <Skeleton className="h-10 w-10 rounded-full" />
+              <Skeleton className="h-10 w-50 rounded-full" />
               <div className="space-y-1">
                 <Skeleton className="h-2 w-24" />
                 <Skeleton className="h-2 w-16" />
@@ -57,9 +57,34 @@ const ProfilePage = () => {
             <Skeleton className="h-8 w-8 rounded-full" />
           </CardContent>
         </Card>
+        <Card className="w-full max-w-md">
+          <CardContent className="flex items-center justify-between py-2 px-3">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-10 w-50 rounded-full" />
+              <div className="space-y-1">
+                <Skeleton className="h-2 w-24" />
+                <Skeleton className="h-2 w-16" />
+              </div>
+            </div>
+            <Skeleton className="h-8 w-8 rounded-full" />
+          </CardContent>
+        </Card>
+        <Card className="w-full max-w-md">
+          <CardContent className="flex items-center justify-between py-2 px-3">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-10 w-50 rounded-full" />
+              <div className="space-y-1">
+                <Skeleton className="h-2 w-24" />
+                <Skeleton className="h-2 w-16" />
+              </div>
+            </div>
+            <Skeleton className="h-8 w-8 rounded-full" />
+          </CardContent>
+        </Card>
+        </div>
       </div>
     );
-  }
+  }  
 
   if (!currentUser) {
     return null; // Будет перенаправлено в useEffect

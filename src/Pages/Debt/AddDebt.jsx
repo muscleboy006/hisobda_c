@@ -20,6 +20,7 @@ import axios from 'axios';
 import api from '@/Utils/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { fetchAccess } from '@/Utils/useAccessStatus';
 // import { toast } from sonner;
 
 const AddDebt = () => {
@@ -111,6 +112,8 @@ const AddDebt = () => {
 
   // Обработчик отправки формы
   const handleSubmit = async (e) => {
+  localStorage.removeItem("isPremium")
+  const { isPremium } = await fetchAccess();
   e.preventDefault();
   
   if (!validateForm()) return;

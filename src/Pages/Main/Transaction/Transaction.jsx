@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import api from '@/Utils/api';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAccessStatus } from '@/Utils/useAccessStatus';
+import { fetchAccess, useAccessStatus } from '@/Utils/useAccessStatus';
 
 // Константы
 const TRANSACTIONS_PER_PAGE = 50;
@@ -293,6 +293,8 @@ const TransactionView = () => {
   }, [allTransactions, filterTransactions, activeCategory]);
 
   const handleDeleteTransaction = useCallback(async (id) => {
+    localStorage.removeItem("isPremium")
+    const { isPremium } = await fetchAccess();
     if (!isPremium) return; // Prevent deletion if not premium
     
     try {
@@ -441,7 +443,7 @@ const TransactionView = () => {
         </Button>
       </div>
       
-      {!isPremium && (
+      {!isPremium && !accessLoading && (
         <div className="bg-amber-100 border border-amber-300 text-amber-800 rounded-lg p-3 mb-6">
           <p className="text-sm font-medium">Sizning premium muddatingiz tugagan.</p>
           <p className="text-xs">Tranzaksiylarni o'chirish yoki qo'shish uchun premium hisob oling</p>
