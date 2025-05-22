@@ -15,6 +15,7 @@ import { AuthProvider } from './AuthContext';
 import ProfilePage from './Utils/ProfilePage';
 import { ProtectedRoute, PublicRoute } from './Utils/AuthRoutes';
 import AccessWrapper from './Utils/AccessWrapper';
+import PremiumPage from './Utils/PremiumPage';
 
 function App() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -67,6 +68,7 @@ function App() {
               <Route path="/actions" element={<TransactionView />} />
               <Route path="/debts" element={<DebtView />} />
               <Route path="/debt/:id" element={<DebtDetailView />} />
+              <Route path="/premium" element={<PremiumPage />} />
               <Route element={<AccessWrapper />}>
                 <Route path="/debt/add" element={<AddDebt />} />
                 <Route path="/debt/edit/:id" element={<EditDebt />} />

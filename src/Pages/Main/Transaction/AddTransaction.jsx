@@ -9,6 +9,7 @@ import {
   ArrowLeftIcon,
   WalletIcon,
   TriangleAlertIcon,
+  ShoppingCartIcon,
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import axios from "axios";
@@ -139,7 +140,7 @@ const AddTransaction = ({ onBack, onSuccess, balance }) => {
         </div>
 
         {/* Categories */}
-        <div className="grid grid-cols-3 gap-3 mb-3">
+        <div className="grid grid-cols-2 gap-3 mb-3">
           <CategoryButton
             label="Maosh"
             icon={<BriefcaseIcon className="w-5 h-5 text-blue-500" />}
@@ -157,6 +158,12 @@ const AddTransaction = ({ onBack, onSuccess, balance }) => {
             icon={<TrophyIcon className="w-5 h-5 text-gray-500" />}
             isActive={category === "award"}
             onClick={() => setCategory("award")}
+          />
+          <CategoryButton
+            label="Xarid"
+            icon={<ShoppingCartIcon className="w-5 h-5 text-gray-500" />}
+            isActive={category === "shopping"}
+            onClick={() => setCategory("shopping")}
           />
         </div>
 

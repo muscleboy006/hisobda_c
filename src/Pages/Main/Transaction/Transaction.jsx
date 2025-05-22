@@ -26,21 +26,19 @@ const CATEGORY_ICONS = {
 };
 
 const CATEGORY_COLORS = {
-  shopping: 'bg-purple-500',
   salary: 'bg-green-500',
   gift: 'bg-pink-500',
+  shopping: 'bg-purple-500',
   award: 'bg-yellow-500',
   other: 'bg-gray-500',
-  default: 'bg-blue-500'
 };
 
 const UZBEK_CATEGORY_NAMES = {
-  shopping: 'Xaridlar',
   salary: 'Maosh',
-  gift: 'Sovgʻa',
+  gift: "Hadiya",
   award: 'Mukofot',
-  other: 'Boshqa',
-  default: 'Kategoriyasiz'
+  shopping: 'Xarid',
+  other: 'Boshqa'
 };
 
 const PERIODS = ['Bu oy', 'Bugun', 'Bu hafta', 'Bu yil', 'Umumiy'];

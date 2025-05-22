@@ -231,6 +231,45 @@ const ProfilePage = () => {
           </CardContent>
         </Card>
       </div>
+
+      <Card className="w-full max-w-md mb-1 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 border-2 border-blue-200 shadow-md hover:shadow-lg transition-shadow duration-200">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold text-blue-800 flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                ⭐ Premium obuna
+              </span>
+              <span className="text-xs bg-blue-600 text-white px-2 py-1 rounded-full font-medium">
+                TOP
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-600">
+                  Cheksiz imkoniyatlar
+                </p>
+                {/* <div className="text-right">
+                  <div className="text-lg font-bold text-blue-700">36 000</div>
+                  <div className="text-xs text-gray-500 -mt-1">so'm/oy</div>
+                </div> */}
+              </div>
+              
+              <div className="flex items-center gap-2 text-xs text-gray-600">
+                <span className="text-green-600">✓</span>
+                <span>Barcha funksiyalar</span>
+              </div>
+              
+              <Button 
+                onClick={() => navigate('/premium')}
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-sm h-9 font-medium shadow-sm hover:shadow-md transition-all duration-200"
+                size="sm"
+              >
+                💳 Sotib olish
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
     </div>
   );
 };
