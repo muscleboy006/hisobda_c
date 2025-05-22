@@ -9,7 +9,7 @@ const PremiumPage = () => {
   const [selectedPlan, setSelectedPlan] = useState('1month');
 
   const handlePurchase = (planType, price) => {
-    const message = `Salom! Men ${planType} tarifini sotib olmoqchiman. Narxi: ${price} so'm`;
+    const message = `Assalomu alaikum! Men ${planType} lik tarifni sotib olmoqchiman. Narxi: ${price} so'm`;
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://t.me/hisobda_app?text=${encodedMessage}`, '_blank');
   };
