@@ -8,11 +8,11 @@ import {
   TrophyIcon,
   ArrowLeftIcon,
   TriangleAlertIcon,
+  ShoppingCartIcon,
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import axios from "axios";
 import api from "@/Utils/api";
-import { fetchAccess } from "@/Utils/useAccessStatus";
 
 const EditTransaction = ({ transaction, onBack, onSuccess, balance }) => {
   const [type, setType] = useState(transaction?.type || "income");
@@ -33,8 +33,6 @@ const EditTransaction = ({ transaction, onBack, onSuccess, balance }) => {
   }, [transaction]);
 
   const handleSubmit = async () => {
-    localStorage.removeItem("isPremium")
-    const { isPremium } = await fetchAccess();
     if (!amount || parseFloat(amount) <= 0) {
       setError("Miqdor musbat bo‘lishi kerak.");
       return;
@@ -147,8 +145,8 @@ const EditTransaction = ({ transaction, onBack, onSuccess, balance }) => {
         </div>
 
         {/* Categories */}
-        <div className="grid grid-cols-3 gap-3 mb-3">
-          <CategoryButton
+        <div className="grid grid-cols-2 gap-3 mb-3">
+        <CategoryButton
             label="Maosh"
             icon={<BriefcaseIcon className="w-5 h-5 text-blue-500" />}
             isActive={category === "salary"}
@@ -165,6 +163,12 @@ const EditTransaction = ({ transaction, onBack, onSuccess, balance }) => {
             icon={<TrophyIcon className="w-5 h-5 text-gray-500" />}
             isActive={category === "award"}
             onClick={() => setCategory("award")}
+          />
+          <CategoryButton
+            label="Xarid"
+            icon={<ShoppingCartIcon className="w-5 h-5 text-gray-500" />}
+            isActive={category === "shopping"}
+            onClick={() => setCategory("shopping")}
           />
         </div>
 

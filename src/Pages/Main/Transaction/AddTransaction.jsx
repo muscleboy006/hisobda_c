@@ -14,7 +14,6 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import axios from "axios";
 import api from "@/Utils/api";
-import { fetchAccess } from "@/Utils/useAccessStatus";
 
 const AddTransaction = ({ onBack, onSuccess, balance }) => {
   const [type, setType] = useState("income");
@@ -26,8 +25,6 @@ const AddTransaction = ({ onBack, onSuccess, balance }) => {
   const [showBalanceError, setShowBalanceError] = useState(false);
 
   const handleSubmit = async () => {
-    localStorage.removeItem("isPremium")
-    const { isPremium } = await fetchAccess();
     if (!amount || parseFloat(amount) <= 0) {
       setError("Miqdor musbat bo‘lishi kerak.");
       return;

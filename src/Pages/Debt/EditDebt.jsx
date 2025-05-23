@@ -20,7 +20,6 @@ import axios from 'axios';
 import api from '@/Utils/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { fetchAccess } from '@/Utils/useAccessStatus';
 
 const EditDebt = () => {
   const navigate = useNavigate();
@@ -91,10 +90,7 @@ const EditDebt = () => {
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
-    localStorage.removeItem("isPremium")
-    const { isPremium } = await fetchAccess();
-
+  const handleSubmit = async (e) => {    
     e.preventDefault();
 
     setLoading(true);

@@ -24,7 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AddTransaction from './Transaction/AddTransaction';
 import EditTransaction from './Transaction/EditTransaction';
-import { fetchAccess, useAccessStatus } from '@/Utils/useAccessStatus';
+import { useAccessStatus } from '@/Utils/useAccessStatus';
 
 const BalanceCard = ({ balance, income, expense, isLoading }) => (
   <Card className="bg-gradient-to-br from-purple-500 to-pink-400 text-white rounded-xl shadow-sm">
@@ -240,9 +240,7 @@ const Main = () => {
     ]).catch(console.error);
   }, [activePeriod]);
 
-  const handleDeleteTransaction = async (id) => {
-    localStorage.removeItem("isPremium")
-    const { isPremium } = await fetchAccess();
+  const handleDeleteTransaction = async (id) => {    
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
@@ -346,7 +344,7 @@ const Main = () => {
       <BalanceCard balance={balance} income={income} expense={expense} isLoading={loading} />
       {!isPremium && !accessLoading && (
             <div className="bg-amber-100 border border-amber-300 text-amber-800 rounded-lg p-3 my-2">
-              <p className="text-sm font-medium" onClick={() => navigate('/premium')}>Sizning premium muddatingiz tugagan.</p>
+              <p className="text-sm font-medium underline" onClick={() => navigate('/premium')}>Sizning premium muddatingiz tugagan.</p>
               <p className="text-xs">Tranzaksiylarni o'chirish yoki qo'shish uchun premium hisob oling</p>
             </div>
       )}
