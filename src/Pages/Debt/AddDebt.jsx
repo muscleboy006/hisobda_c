@@ -20,12 +20,13 @@ import axios from 'axios';
 import api from '@/Utils/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'; // Предполагается, что у вас есть компонент Alert
 
 const AddDebt = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [wallets, setWallets] = useState([]);
-  const walletId = localStorage.getItem("walletId")
+  const walletId = localStorage.getItem("walletId");
   const [formData, setFormData] = useState({
     walletId: walletId,
     type: 'given',
@@ -34,6 +35,7 @@ const AddDebt = () => {
     note: '',
   });
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState(''); // Новое состояние для серверных ошибок
 
   // Загрузка кошельков пользователя
   useEffect(() => {
@@ -83,13 +85,13 @@ const AddDebt = () => {
       [name]: value,
     });
     
-    // Очистка ошибки при изменении поля
     if (errors[name]) {
       setErrors({
         ...errors,
         [name]: undefined,
       });
     }
+    setServerError(''); // Очистка серверной ошибки при изменении поля
   };
 
   // Обработчик изменения select полей
@@ -105,53 +107,54 @@ const AddDebt = () => {
         [name]: undefined,
       });
     }
+    setServerError(''); // Очистка серверной ошибки при изменении поля
   };
 
   // Обработчик отправки формы
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  
-  if (!validateForm()) return;
-  
-  setLoading(true);
-  try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.error('Authorization token not found. Please login again.');
-      navigate('/login');
-      return;
-    }
+    e.preventDefault();
     
-    await axios.post(
-      `${api}/api/debt`,
-      formData,
-      {
-        headers: { Authorization: `Bearer ${token}` },
+    if (!validateForm()) return;
+    
+    setLoading(true);
+    setServerError(''); // Очистка предыдущей серверной ошибки
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setServerError('Autorizatsiya tokeni topilmadi. Iltimos, qayta kiring.');
+        navigate('/login');
+        return;
       }
-    );
+      
+      await axios.post(
+        `${api}/api/debt`,
+        formData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-    localStorage.removeItem("debts")
-    
-    console.log('Debt created successfully!');
-    navigate('/debts');
-  } catch (error) {
-    console.error('Error creating debt:', error);
-    
-    if (error.response?.status === 401) {
-      console.error('Session expired. Please login again.');
-      navigate('/login');
-    } else if (error.response?.data?.error) {
-      // Display the specific error message from the API
-      console.error(error.response.data.error);
-    } else if (!error.response) {
-      console.error('Network error. Please check your connection.');
-    } else {
-      console.error('Failed to create debt. Please try again.');
+      localStorage.removeItem("debts");
+      
+      console.log('Debt created successfully!');
+      navigate('/debts');
+    } catch (error) {
+      console.error('Error creating debt:', error);
+      
+      if (error.response?.status === 401) {
+        setServerError('Sessiya muddati tugadi. Iltimos, qayta kiring.');
+        navigate('/login');
+      } else if (error.response?.data?.error) {
+        setServerError(error.response.data.error);
+      } else if (!error.response) {
+        setServerError('Internet aloqasi yo\'q. Iltimos, aloqani tekshiring.');
+      } else {
+        setServerError('Qarzni yaratishda xatolik yuz berdi. Iltimos, qayta urinib koring.');
+      }
+    } finally {
+      setLoading(false);
     }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="pt-6 pb-24 flex flex-col min-h-screen px-4 sm:px-6 md:px-8">
@@ -173,6 +176,12 @@ const AddDebt = () => {
           <CardTitle className="text-center">Qarz ma'lumotlari</CardTitle>
         </CardHeader>
         <CardContent>
+          {serverError && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertTitle>Xatolik</AlertTitle>
+              <AlertDescription>{serverError}</AlertDescription>
+            </Alert>
+          )}
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Qarz turi */}
             <div className="space-y-2">
@@ -267,4 +276,4 @@ const AddDebt = () => {
   );
 };
 
-export default AddDebt
+export default AddDebt;
