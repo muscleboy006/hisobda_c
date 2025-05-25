@@ -49,8 +49,7 @@ const AddTransaction = ({ onBack, onSuccess, balance }) => {
           type,
           note,
           amount: amountValue,
-          category,
-          date: new Date().toISOString(),
+          category
         },
         {
           headers: { Authorization: `Bearer ${token}` },

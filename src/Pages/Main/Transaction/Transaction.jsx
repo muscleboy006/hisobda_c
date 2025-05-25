@@ -125,7 +125,9 @@ const TransactionView = () => {
       }
       case 'Bu hafta': {
         const start = new Date(startOfDay);
-        start.setDate(startOfDay.getDate() - startOfDay.getDay());
+        const dayOfWeek = startOfDay.getDay();
+        const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+        start.setDate(startOfDay.getDate() - daysToMonday);
         const end = new Date(now);
         end.setHours(23, 59, 59, 999);
         return { start, end };
@@ -137,7 +139,6 @@ const TransactionView = () => {
         return { start, end };
       }
       case 'Bu yil': {
-        // Исправлена опечатка: now.getFullYear -> now.getFullYear()
         const start = new Date(now.getFullYear(), 0, 1);
         const end = new Date(now);
         end.setHours(23, 59, 59, 999);
