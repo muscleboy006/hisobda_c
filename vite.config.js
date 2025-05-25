@@ -18,6 +18,7 @@ export default defineConfig({
       manifestFilePath: 'public/manifest.json'
     })
   ],
+  base: '/',
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
