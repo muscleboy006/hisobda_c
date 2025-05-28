@@ -9,6 +9,7 @@ import MainLayout from './Pages/Tabs';
 import StatisticsDashboard from './Pages/Report/Report';
 import { useState, useEffect } from 'react';
 import InstallPromptModal from './Modal/InstallPromptModal';
+import IosInstallGuideModal from './Modal/IosInstallGuideModal';
 import EditDebt from './Pages/Debt/EditDebt';
 import LoginPage from './Utils/LoginPage';
 import { AuthProvider } from './AuthContext';
@@ -24,6 +25,21 @@ function App() {
     window.matchMedia('(display-mode: standalone)').matches ||
     window.navigator.standalone
   );
+  const [showIosGuide, setShowIosGuide] = useState(false);
+
+  useEffect(() => {
+    const isIos = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+    const isInStandaloneMode = ('standalone' in navigator && navigator.standalone);
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  
+    const alreadyShown = localStorage.getItem('iosInstallPromptShown') === 'true';
+  
+    if (isIos && isSafari && !isInStandaloneMode && !alreadyShown) {
+      setShowIosGuide(true);
+      localStorage.setItem('iosInstallPromptShown', 'true');
+    }
+  }, []);
+  
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
@@ -51,6 +67,10 @@ function App() {
       setDeferredPrompt(null);
     }
   };
+
+  {showIosGuide && (
+    <IosInstallGuideModal onClose={() => setShowIosGuide(false)} />
+  )}
 
   return (
     <AuthProvider>
