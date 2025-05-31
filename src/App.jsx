@@ -28,13 +28,12 @@ function App() {
   const [showIosGuide, setShowIosGuide] = useState(false);
 
   useEffect(() => {
-    const isIos = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
-    const isInStandaloneMode = ('standalone' in navigator && navigator.standalone);
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-  
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isAndroid = /android/.test(userAgent);
+    const isInStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     const alreadyShown = localStorage.getItem('iosInstallPromptShown') === 'true';
   
-    if (isIos && isSafari && !isInStandaloneMode && !alreadyShown) {
+    if (!isAndroid && !isInStandalone && !alreadyShown) {
       setShowIosGuide(true);
       localStorage.setItem('iosInstallPromptShown', 'true');
     }
@@ -103,8 +102,13 @@ function App() {
           <Route path="*" element={<Navigate to="/auth" replace />} />
         </Routes>
 
+        {/* Модалки нужно рендерить здесь */}
         {deferredPrompt && !isAppInstalled && (
           <InstallPromptModal onInstall={handleInstall} />
+        )}
+
+        {showIosGuide && (
+          <IosInstallGuideModal onClose={() => setShowIosGuide(false)} />
         )}
       </Router>
     </AuthProvider>
