@@ -22,8 +22,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import api from '@/Utils/api';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import AddTransaction from './Transaction/AddTransaction';
-import EditTransaction from './Transaction/EditTransaction';
+import AddTransaction from './src/Pages/Main/Transaction/AddTransaction';
+import EditTransaction from './src/Pages/Main/Transaction/EditTransaction';
 import { useAccessStatus } from '@/Utils/useAccessStatus';
 
 const BalanceCard = ({ balance, income, expense, isLoading }) => (

@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
-import Dashboard from './Pages/Main/Main';
+import Dashboard from '../Main';
 import TransactionView from './Pages/Main/Transaction/Transaction';
 import DebtView from './Pages/Debt/Debt';
 import AddDebt from './Pages/Debt/AddDebt';
@@ -66,10 +66,6 @@ function App() {
       setDeferredPrompt(null);
     }
   };
-
-  {showIosGuide && (
-    <IosInstallGuideModal onClose={() => setShowIosGuide(false)} />
-  )}
 
   return (
     <AuthProvider>
