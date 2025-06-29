@@ -146,19 +146,7 @@ const Main = () => {
       if (initial) {
         setLoading(true);
         setPage(0);
-        setTransactions([]); // Очищаем старые транзакции при начальной загрузке
-
-        // Используем кэш только если период не изменился
-        const cachedRaw = localStorage.getItem(`actions_${period}`);
-        const cached = cachedRaw ? JSON.parse(cachedRaw) : null;
-
-        if (cached?.data?.length > 0 && cached.period === period) {
-          setTransactions(cached.data);
-          setPage(cached.page || 1);
-          setHasMore(cached.hasMore ?? true);
-          setLoading(false);
-          return;
-        }
+        setTransactions([]);
       } else {
         setLoadingMore(true);
       }
@@ -167,7 +155,6 @@ const Main = () => {
       if (!token) return navigate('/login');
 
       const skip = initial ? 0 : page * 50;
-      // Исправляем URL - убираем дублирование параметров
       const res = await axios.get(`${api}/api/action?limit=50&skip=${skip}&period=${period}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -188,14 +175,6 @@ const Main = () => {
       const updatedTransactions = initial ? newData : [...transactions, ...newData];
       const nextPage = initial ? 1 : page + 1;
       const nextHasMore = newData.length === 50;
-
-      // Сохраняем кэш с указанием периода
-      localStorage.setItem(`actions_${period}`, JSON.stringify({ 
-        data: updatedTransactions, 
-        page: nextPage, 
-        hasMore: nextHasMore,
-        period: period 
-      }));
 
       setTransactions(updatedTransactions);
       setPage(nextPage);
@@ -238,7 +217,7 @@ const Main = () => {
     }
   };
 
-  // Сброс состояния при изменении периода
+  // Загрузка данных при изменении периода
   useEffect(() => {
     setLoading(true);
     setTransactions([]);
@@ -258,11 +237,6 @@ const Main = () => {
       const token = localStorage.getItem('token');
       await axios.delete(`${api}/api/action/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
-      });
-
-      // Очищаем все кэши периодов
-      periods.forEach(period => {
-        localStorage.removeItem(`actions_${period}`);
       });
 
       await Promise.all([
@@ -310,10 +284,6 @@ const Main = () => {
         onBack={() => setActiveTab("home")}
         onSuccess={() => {
           setLoading(true);
-          // Очищаем все кэши при добавлении новой транзакции
-          periods.forEach(period => {
-            localStorage.removeItem(`actions_${period}`);
-          });
           Promise.all([
             fetchTransactions(true, activePeriod),
             getSummary(activePeriod),
@@ -332,10 +302,6 @@ const Main = () => {
         onBack={() => setActiveTab("home")}
         onSuccess={() => {
           setLoading(true);
-          // Очищаем все кэши при редактировании транзакции
-          periods.forEach(period => {
-            localStorage.removeItem(`actions_${period}`);
-          });
           Promise.all([
             fetchTransactions(true, activePeriod),
             getSummary(activePeriod),

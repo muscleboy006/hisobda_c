@@ -247,20 +247,6 @@ const DebtView = () => {
       if (initial) {
         setLoading(true);
         setPage(0);
-
-        // Check cache
-        const cachedRaw = localStorage.getItem("debts");
-        const cached = cachedRaw ? JSON.parse(cachedRaw) : null;
-
-        if (cached?.data?.length > 0) {
-          setAllDebts(cached.data);
-          setDisplayedDebts(filterDebts(cached.data, statusFilter));
-          setPage(cached.page || 1);
-          setHasMore(cached.hasMore ?? true);
-          fetchDebtStats();
-          setLoading(false);
-          return;
-        }
       } else {
         setLoadingMore(true);
       }
@@ -290,18 +276,7 @@ const DebtView = () => {
         setPage(prev => prev + 1);
       }
 
-      const nextPage = initial ? 1 : page + 1;
       const nextHasMore = res.data.hasMore || newData.length === DEBTS_PER_PAGE;
-
-      // Update cache
-      localStorage.setItem(
-        "debts",
-        JSON.stringify({
-          data: updatedDebts,
-          page: nextPage,
-          hasMore: nextHasMore,
-        })
-      );
 
       setAllDebts(updatedDebts);
       setDisplayedDebts(filterDebts(updatedDebts, statusFilter));
@@ -323,7 +298,6 @@ const DebtView = () => {
   }, [allDebts, page, statusFilter, createRequestUrl, formatDebtData, filterDebts, navigate, fetchDebtStats]);
 
   const handleDeleteDebt = async (id) => {
-    
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
@@ -331,7 +305,7 @@ const DebtView = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      localStorage.removeItem("debts");
+      // Перезагружаем данные после удаления
       await Promise.all([
         fetchDebts(true),
         fetchDebtStats()

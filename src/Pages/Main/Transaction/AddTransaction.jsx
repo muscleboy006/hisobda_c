@@ -41,11 +41,9 @@ const AddTransaction = ({ onBack, onSuccess, balance }) => {
 
     try {
       const token = localStorage.getItem("token");
-      const walletId = localStorage.getItem("walletId");
       await axios.post(
         `${api}/api/action/add`,
         {
-          walletId,
           type,
           note,
           amount: amountValue,

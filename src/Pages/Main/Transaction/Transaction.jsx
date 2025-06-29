@@ -177,34 +177,11 @@ const TransactionView = () => {
     return url;
   }, [getPeriodFilter]);
 
-  const getCacheKey = useCallback((period) => {
-    return `actions_${period}`;
-  }, []);
-
   const fetchTransactions = useCallback(async (initial = false, period = activePeriod) => {
     try {
       if (initial) {
         setLoading(true);
         setPage(0);
-        const cacheKey = getCacheKey(period);
-        const cachedRaw = localStorage.getItem(cacheKey);
-        if (cachedRaw) {
-          try {
-            const cached = JSON.parse(cachedRaw);
-            if (cached?.data?.length > 0) {
-              setAllTransactions(cached.data);
-              const filtered = filterTransactions(cached.data, activeCategory);
-              setDisplayedTransactions(filtered);
-              setPage(cached.page || 1);
-              setHasMore(cached.hasMore ?? true);
-              setLoading(false);
-              return;
-            }
-          } catch (error) {
-            console.warn(`Cache for period ${period} is invalid, fetching new data`);
-            localStorage.removeItem(cacheKey);
-          }
-        }
       } else {
         setLoadingMore(true);
       }
@@ -220,26 +197,16 @@ const TransactionView = () => {
       const res = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
 
       const newData = formatTransactionData(res.data.transactions);
-      let nextPage;
-      let nextHasMore = newData.length === TRANSACTIONS_PER_PAGE;
+      const nextHasMore = newData.length === TRANSACTIONS_PER_PAGE;
 
       setAllTransactions((prev) => {
         const updatedTransactions = initial ? newData : [...prev, ...newData];
-        nextPage = initial ? 1 : page + 1;
-        const cacheKey = getCacheKey(period);
-        localStorage.setItem(cacheKey, JSON.stringify({
-          data: updatedTransactions,
-          page: nextPage,
-          hasMore: nextHasMore,
-          period,
-          lastUpdated: new Date().toISOString(),
-        }));
         const filteredTransactions = filterTransactions(updatedTransactions, activeCategory);
         setDisplayedTransactions(filteredTransactions);
         return updatedTransactions;
       });
 
-      setPage(nextPage);
+      setPage(initial ? 1 : page + 1);
       setHasMore(nextHasMore);
     } catch (err) {
       console.error('Error fetching transactions:', err);
@@ -248,7 +215,7 @@ const TransactionView = () => {
       setLoading(false);
       setLoadingMore(false);
     }
-  }, [page, activeCategory, createRequestUrl, formatTransactionData, filterTransactions, navigate, activePeriod, getCacheKey]);
+  }, [page, activeCategory, createRequestUrl, formatTransactionData, filterTransactions, navigate, activePeriod]);
 
   const handlePeriodChange = useCallback((period) => {
     if (period === activePeriod) return;
@@ -256,28 +223,11 @@ const TransactionView = () => {
     setActivePeriod(period);
     setPage(0);
     setHasMore(true);
-    
-    const cacheKey = getCacheKey(period);
-    const cachedRaw = localStorage.getItem(cacheKey);
-    if (cachedRaw) {
-      try {
-        const cached = JSON.parse(cachedRaw);
-        if (cached?.data?.length > 0) {
-          setAllTransactions(cached.data);
-          const filtered = filterTransactions(cached.data, activeCategory);
-          setDisplayedTransactions(filtered);
-          setPage(cached.page || 1);
-          setHasMore(cached.hasMore ?? true);
-          return;
-        }
-      } catch (error) {
-        console.warn(`Cache for period ${period} is invalid, fetching new data`);
-        localStorage.removeItem(cacheKey);
-      }
-    }
+    setAllTransactions([]);
+    setDisplayedTransactions([]);
     
     fetchTransactions(true, period);
-  }, [fetchTransactions, filterTransactions, activeCategory, activePeriod, getCacheKey]);
+  }, [fetchTransactions, activePeriod]);
 
   const handleCategoryChange = useCallback((category) => {
     if (category === activeCategory) {
@@ -303,9 +253,7 @@ const TransactionView = () => {
       }
       await axios.delete(`${api}/api/action/${id}`, { headers: { Authorization: `Bearer ${token}` } });
       
-      PERIODS.forEach(period => localStorage.removeItem(getCacheKey(period)));
-      localStorage.removeItem("actions");
-      
+      // Перезагружаем данные после удаления
       setPage(0);
       setHasMore(true);
       setAllTransactions([]);
@@ -317,71 +265,14 @@ const TransactionView = () => {
     } finally {
       setLoading(false);
     }
-  }, [isPremium, activePeriod, fetchTransactions, navigate, getCacheKey]);
+  }, [isPremium, activePeriod, fetchTransactions, navigate]);
 
   const loadMore = useCallback(() => {
     if (!loadingMore && hasMore) fetchTransactions(false, activePeriod);
   }, [loadingMore, hasMore, fetchTransactions, activePeriod]);
 
   useEffect(() => {
-    const loadInitialData = async () => {
-      const cacheKey = getCacheKey(activePeriod);
-      const cachedRaw = localStorage.getItem(cacheKey);
-      
-      if (cachedRaw) {
-        try {
-          const cached = JSON.parse(cachedRaw);
-          if (cached?.data?.length > 0) {
-            setAllTransactions(cached.data);
-            const filtered = filterTransactions(cached.data, activeCategory);
-            setDisplayedTransactions(filtered);
-            setPage(cached.page || 1);
-            setHasMore(cached.hasMore ?? true);
-            setLoading(false);
-            return;
-          }
-        } catch (error) {
-          console.warn(`Failed to parse cache for ${activePeriod}, fetching new data`);
-          localStorage.removeItem(cacheKey);
-        }
-      }
-      
-      const mainCache = localStorage.getItem("actions");
-      if (mainCache) {
-        try {
-          const parsed = JSON.parse(mainCache);
-          if (parsed?.data && Array.isArray(parsed.data)) {
-            setAllTransactions(parsed.data);
-            const filtered = filterTransactions(parsed.data, activeCategory);
-            setDisplayedTransactions(filtered);
-            setPage(parsed.page || 1);
-            setHasMore(parsed.hasMore ?? true);
-          } else if (Array.isArray(parsed)) {
-            setAllTransactions(parsed);
-            const filtered = filterTransactions(parsed, activeCategory);
-            setDisplayedTransactions(filtered);
-            setPage(1);
-            setHasMore(true);
-            localStorage.setItem(cacheKey, JSON.stringify({
-              data: parsed,
-              page: 1,
-              hasMore: true,
-              period: activePeriod,
-              lastUpdated: new Date().toISOString()
-            }));
-          }
-          setLoading(false);
-          return;
-        } catch (error) {
-          console.warn("Failed to parse main cache, fetching new data");
-          localStorage.removeItem("actions");
-        }
-      }
-      
-      await fetchTransactions(true, activePeriod);
-    };
-    
-    loadInitialData();
+    fetchTransactions(true, activePeriod);
   }, []);
 
   useEffect(() => {
@@ -506,7 +397,6 @@ const TransactionView = () => {
                     hasAccess={isPremium}
                   />
                 ))}
-                {/* Исправлена логика отображения кнопки "Загрузить еще" */}
                 {hasMore && !loadingMore && displayedTransactions.length >= TRANSACTIONS_PER_PAGE && (
                   <div className="mt-4 mb-2">
                     <Button

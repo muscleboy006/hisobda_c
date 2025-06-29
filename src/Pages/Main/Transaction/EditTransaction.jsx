@@ -49,11 +49,9 @@ const EditTransaction = ({ transaction, onBack, onSuccess, balance }) => {
 
     try {
       const token = localStorage.getItem("token");
-      const walletId = localStorage.getItem("walletId");
       await axios.put(
         `${api}/api/action/${transaction.id}`,
         {
-          walletId,
           type,
           note,
           amount: amountValue,
