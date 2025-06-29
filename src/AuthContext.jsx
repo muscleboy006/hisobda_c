@@ -18,10 +18,9 @@ export const AuthProvider = ({ children }) => {
     
     if (token) {
       fetchUserProfile(token);
-    } else {
-      setLoading(false);
-    }
-    
+      return
+    } 
+
     // Проверяем, доступен ли Telegram Web App
     if (window.Telegram && window.Telegram.WebApp) {
       window.Telegram.WebApp.ready();
