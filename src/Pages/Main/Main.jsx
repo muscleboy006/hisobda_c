@@ -22,8 +22,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import api from '@/Utils/api';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import AddTransaction from './src/Pages/Main/Transaction/AddTransaction';
-import EditTransaction from './src/Pages/Main/Transaction/EditTransaction';
+import AddTransaction from './Transaction/AddTransaction';
+import EditTransaction from './Transaction/EditTransaction';
 import { useAccessStatus } from '@/Utils/useAccessStatus';
 
 const BalanceCard = ({ balance, income, expense, isLoading }) => (
@@ -146,11 +146,13 @@ const Main = () => {
       if (initial) {
         setLoading(true);
         setPage(0);
+        setTransactions([]); // Очищаем старые транзакции при начальной загрузке
 
-        const cachedRaw = localStorage.getItem("actions");
+        // Используем кэш только если период не изменился
+        const cachedRaw = localStorage.getItem(`actions_${period}`);
         const cached = cachedRaw ? JSON.parse(cachedRaw) : null;
 
-        if (cached?.data?.length > 0) {
+        if (cached?.data?.length > 0 && cached.period === period) {
           setTransactions(cached.data);
           setPage(cached.page || 1);
           setHasMore(cached.hasMore ?? true);
@@ -165,7 +167,8 @@ const Main = () => {
       if (!token) return navigate('/login');
 
       const skip = initial ? 0 : page * 50;
-      const res = await axios.get(`${api}/api/action?limit=50?skip=${skip}`, {
+      // Исправляем URL - убираем дублирование параметров
+      const res = await axios.get(`${api}/api/action?limit=50&skip=${skip}&period=${period}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -186,7 +189,13 @@ const Main = () => {
       const nextPage = initial ? 1 : page + 1;
       const nextHasMore = newData.length === 50;
 
-      localStorage.setItem("actions", JSON.stringify({ data: updatedTransactions, page: nextPage, hasMore: nextHasMore }));
+      // Сохраняем кэш с указанием периода
+      localStorage.setItem(`actions_${period}`, JSON.stringify({ 
+        data: updatedTransactions, 
+        page: nextPage, 
+        hasMore: nextHasMore,
+        period: period 
+      }));
 
       setTransactions(updatedTransactions);
       setPage(nextPage);
@@ -226,13 +235,16 @@ const Main = () => {
       setBalance(parseFloat(rawBalance) || 0);
     } catch (error) {
       console.error('Error getting wallet balance:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
+  // Сброс состояния при изменении периода
   useEffect(() => {
     setLoading(true);
+    setTransactions([]);
+    setPage(0);
+    setHasMore(true);
+
     Promise.all([
       fetchTransactions(true, activePeriod),
       getSummary(activePeriod),
@@ -248,7 +260,11 @@ const Main = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      localStorage.removeItem("actions");
+      // Очищаем все кэши периодов
+      periods.forEach(period => {
+        localStorage.removeItem(`actions_${period}`);
+      });
+
       await Promise.all([
         fetchTransactions(true, activePeriod),
         getSummary(activePeriod),
@@ -294,6 +310,10 @@ const Main = () => {
         onBack={() => setActiveTab("home")}
         onSuccess={() => {
           setLoading(true);
+          // Очищаем все кэши при добавлении новой транзакции
+          periods.forEach(period => {
+            localStorage.removeItem(`actions_${period}`);
+          });
           Promise.all([
             fetchTransactions(true, activePeriod),
             getSummary(activePeriod),
@@ -312,6 +332,10 @@ const Main = () => {
         onBack={() => setActiveTab("home")}
         onSuccess={() => {
           setLoading(true);
+          // Очищаем все кэши при редактировании транзакции
+          periods.forEach(period => {
+            localStorage.removeItem(`actions_${period}`);
+          });
           Promise.all([
             fetchTransactions(true, activePeriod),
             getSummary(activePeriod),
