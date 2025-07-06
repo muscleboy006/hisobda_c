@@ -5,7 +5,6 @@ import { ArrowLeft, Crown } from 'lucide-react';
 
 const PremiumPage = () => {
   const handleBack = () => {
-    // Заглушка для навигации назад
     console.log('Навигация назад');
   };
   const [selectedPlan, setSelectedPlan] = useState('2months');
