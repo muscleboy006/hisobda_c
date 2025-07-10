@@ -201,37 +201,6 @@ const ProfilePage = () => {
           </AlertDialog>
         </CardContent>
       </Card>
-
-      {/* Информация о пробном периоде */}
-      {!access && premiumEndsAt && formatPremiumEndDate(premiumEndsAt) && (
-        <Card className="w-full max-w-md mb-4">
-          <CardHeader>
-            <CardTitle className="text-sm font-medium">Premium muddat</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className={isPremiumEnded ? "text-sm text-red-600" : "text-sm text-gray-600"}>
-              {isPremiumEnded
-                ? `Sizning premium muddatingiz ${formatPremiumEndDate(premiumEndsAt)} da tugagan`
-                : `Sizning premium muddatingiz ${formatPremiumEndDate(premiumEndsAt)} da tugaydi`}
-            </p>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Место для дополнительных элементов */}
-      <div className="w-full max-w-md space-y-2">
-        {/* Здесь вы можете добавить дополнительные карточки или компоненты */}
-        <Card className="w-full max-w-md mb-1">
-        <CardHeader>
-            <CardTitle className="text-sm font-medium">Ilova haqida</CardTitle>
-          </CardHeader>
-          <CardContent>
-              Savol va takliflaringiz bolsa yozishingiz mumkun. <br />
-              Telegram: <a href="https://t.me/hisobda_app" className='underline text-blue-500'>@hisobda_app</a>
-          </CardContent>
-        </Card>
-      </div>
-
       <Card className="w-full max-w-md mb-1 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 border-2 border-blue-200 shadow-md hover:shadow-lg transition-shadow duration-200">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-semibold text-blue-800 flex items-center justify-between">
@@ -270,6 +239,36 @@ const ProfilePage = () => {
             </div>
           </CardContent>
         </Card>
+
+      {/* Информация о пробном периоде */}
+      {!access && premiumEndsAt && formatPremiumEndDate(premiumEndsAt) && (
+        <Card className="w-full max-w-md mb-4">
+          <CardHeader>
+            <CardTitle className="text-sm font-medium">Premium muddat</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className={isPremiumEnded ? "text-sm text-red-600" : "text-sm text-gray-600"}>
+              {isPremiumEnded
+                ? `Sizning premium muddatingiz ${formatPremiumEndDate(premiumEndsAt)} da tugagan`
+                : `Sizning premium muddatingiz ${formatPremiumEndDate(premiumEndsAt)} da tugaydi`}
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Место для дополнительных элементов */}
+      <div className="w-full max-w-md space-y-2">
+        {/* Здесь вы можете добавить дополнительные карточки или компоненты */}
+        <Card className="w-full max-w-md mb-1">
+        <CardHeader>
+            <CardTitle className="text-sm font-medium">Ilova haqida</CardTitle>
+          </CardHeader>
+          <CardContent>
+              Savol va takliflaringiz bolsa yozishingiz mumkun. <br />
+              Telegram: <a href="https://t.me/hisobda_app" className='underline text-blue-500'>@hisobda_app</a>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

@@ -22,6 +22,7 @@ import api from '@/Utils/api';
 import { 
   // fetchAccess, 
   useAccessStatus } from '@/Utils/useAccessStatus';
+import PremiumModal from '@/Utils/PremiumModal';
 
 const DEBT_STATUS = {
   paid: 'Tolangan',
@@ -54,6 +55,7 @@ const DebtDetailView = () => {
   const [isDeletePaymentConfirmOpen, setIsDeletePaymentConfirmOpen] = useState(false);
   const [paymentToDelete, setPaymentToDelete] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
 
   // Форматирование числа
   const formatAmount = (amount) => {
@@ -164,10 +166,22 @@ const DebtDetailView = () => {
     }
   };
 
+  // Обработчик клика по кнопке "Добавить платеж"
+  const handleAddPaymentClick = () => {
+    if (!isPremium) {
+      setShowPremiumModal(true);
+      return;
+    }
+    setIsAddPaymentOpen(true);
+  };
+
   // Открыть диалог подтверждения удаления платежа
   const openDeletePaymentConfirm = async (payment) => {
     
-    if (!isPremium) return; // Prevent opening delete dialog if no premium access
+    if (!isPremium) {
+      setShowPremiumModal(true);
+      return;
+    }
     setPaymentToDelete(payment);
     setIsDeletePaymentConfirmOpen(true);
   };
@@ -196,6 +210,24 @@ const DebtDetailView = () => {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  // Обработчик клика по кнопке "Редактировать долг"
+  const handleEditDebtClick = () => {
+    if (!isPremium) {
+      setShowPremiumModal(true);
+      return;
+    }
+    navigate(`/debt/edit/${id}`);
+  };
+
+  // Обработчик клика по кнопке "Удалить долг"
+  const handleDeleteDebtClick = () => {
+    if (!isPremium) {
+      setShowPremiumModal(true);
+      return;
+    }
+    setIsDeleteConfirmOpen(true);
   };
 
   // Удаление долга
@@ -386,18 +418,16 @@ const DebtDetailView = () => {
                 <Button 
                   variant="outline" 
                   size="sm"
-                  onClick={() => isPremium ? navigate(`/debt/edit/${id}`) : undefined}
+                  onClick={handleEditDebtClick}
                   className={`flex items-center gap-1 ${!isPremium ? "text-gray-300 cursor-not-allowed" : ""}`}
-                  disabled={!isPremium}
                 >
                   <PencilIcon className="w-4 h-4" />
                 </Button>
                 <Button 
                   variant="destructive" 
                   size="sm"
-                  onClick={() => isPremium ? setIsDeleteConfirmOpen(true) : undefined}
+                  onClick={handleDeleteDebtClick}
                   className={`flex items-center gap-1 ${!isPremium ? "bg-gray-300 cursor-not-allowed hover:bg-gray-300" : ""}`}
-                  disabled={!isPremium}
                 >
                   <TrashIcon className="w-4 h-4" />
                 </Button>
@@ -445,10 +475,9 @@ const DebtDetailView = () => {
             <h2 className="text-lg font-semibold">Toʻlovlar tarixi</h2>
             {!isFullyPaid && (
               <Button 
-                onClick={() => isPremium ? setIsAddPaymentOpen(true) : undefined}
-                className={`flex items-center gap-1 py-1 px-2 text-sm ${!isPremium ? "bg-gray-300 cursor-not-allowed hover:bg-gray-300" : ""}`}
+                onClick={handleAddPaymentClick}
+                className="flex items-center gap-1 py-1 px-2 text-sm"
                 size="sm"
-                disabled={!isPremium}
               >
                 <PlusCircleIcon className="w-4 h-4" />
                 Toʻlov qoʻshish
@@ -480,11 +509,10 @@ const DebtDetailView = () => {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => isPremium ? openDeletePaymentConfirm(payment) : undefined}
-                            className={`h-6 w-6 rounded-full ${!isPremium ? "text-gray-300 cursor-not-allowed" : ""}`}
-                            disabled={!isPremium}
+                            onClick={() => openDeletePaymentConfirm(payment)}
+                            className="h-6 w-6 rounded-full"
                           >
-                            <TrashIcon className={`w-4 h-4 ${isPremium ? "text-red-500" : "text-gray-300"}`} />
+                            <TrashIcon className="w-4 h-4 text-red-500" />
                           </Button>
                         </div>
                       </div>
@@ -630,6 +658,9 @@ const DebtDetailView = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Premium Modal */}
+      <PremiumModal open={showPremiumModal} onClose={() => setShowPremiumModal(false)} />
     </div>
   );
 };

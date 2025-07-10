@@ -7,6 +7,7 @@ import api from '@/Utils/api';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAccessStatus } from '@/Utils/useAccessStatus';
+import PremiumModal from '@/Utils/PremiumModal';
 
 // Constants for display
 const DEBTS_PER_PAGE = 50;
@@ -144,6 +145,7 @@ const DebtView = () => {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [statusFilter, setStatusFilter] = useState('all');
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [debtStats, setDebtStats] = useState({
     given: 0,
     givenPaid: 0,
@@ -154,6 +156,15 @@ const DebtView = () => {
   });
   const [statsLoading, setStatsLoading] = useState(true);
   const navigate = useNavigate();
+
+  // Handle add debt button click
+  const handleAddDebtClick = () => {
+    if (isPremium) {
+      navigate('/debt/add');
+    } else {
+      setShowPremiumModal(true);
+    }
+  };
 
   // Filter function for debts by status
   const filterDebts = useCallback((debts, status) => {
@@ -346,10 +357,9 @@ const DebtView = () => {
           <div className="flex items-center justify-between mb-3">
             <h1 className="text-xl font-bold">Qarzlar</h1>
             <Button
-              onClick={() => navigate('/debt/add')}
+              onClick={handleAddDebtClick}
               className="flex items-center gap-1 py-1 px-2 text-sm"
               size="sm"
-              disabled={!isPremium}
             >
               <PlusIcon className="w-4 h-4" />
               Qarz qo'shish
@@ -501,6 +511,8 @@ const DebtView = () => {
           </div>
         </div>
       </div>
+
+      <PremiumModal open={showPremiumModal} onClose={() => setShowPremiumModal(false)} />
     </div>
   );
 };

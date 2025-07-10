@@ -16,6 +16,8 @@ export const useAccessStatus = () => {
         });
 
         const { isPremium, premiumEndsAt } = res.data;
+        console.log(res.data);
+        
 
         setIsPremium(isPremium);
         setPremiumEndsAt(premiumEndsAt);

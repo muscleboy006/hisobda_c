@@ -1,5 +1,5 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Home, HandCoins, BarChart3, Settings } from 'lucide-react';
+import { Home, HandCoins, BarChart3, Settings, Star } from 'lucide-react';
 
 export default function MainLayout() {
   const location = useLocation();
@@ -68,8 +68,8 @@ export default function MainLayout() {
           onClick={() => handleTabChange('sozlama')}
           className={`flex flex-col items-center justify-center text-sm w-full text-center transition-colors ${activeTab === 'sozlama' ? 'text-blue-600' : ''}`}
         >
-          <Settings className="w-6 h-6" />
-          Sozlama
+          <Star className="w-6 h-6" />
+          Premium
         </button>
       </div>
     </div>

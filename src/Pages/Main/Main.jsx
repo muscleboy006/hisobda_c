@@ -25,6 +25,7 @@ import axios from 'axios';
 import AddTransaction from './Transaction/AddTransaction';
 import EditTransaction from './Transaction/EditTransaction';
 import { useAccessStatus } from '@/Utils/useAccessStatus';
+import PremiumModal from '@/Utils/PremiumModal';
 
 const BalanceCard = ({ balance, income, expense, isLoading }) => (
   <Card className="bg-gradient-to-br from-purple-500 to-pink-400 text-white rounded-xl shadow-sm">
@@ -139,6 +140,7 @@ const Main = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [activeTab, setActiveTab] = useState('home');
   const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
   const navigate = useNavigate();
 
   const fetchTransactions = async (initial = false, period = activePeriod) => {
@@ -278,6 +280,15 @@ const Main = () => {
     if (!loadingMore && hasMore) fetchTransactions(false, activePeriod);
   };
 
+  // Обработчик клика по кнопке добавления транзакции
+  const handleAddTransactionClick = () => {
+    if (!isPremium) {
+      setShowPremiumModal(true);
+    } else {
+      setActiveTab('add');
+    }
+  };
+
   if (activeTab === 'add') {
     return (
       <AddTransaction
@@ -318,6 +329,8 @@ const Main = () => {
 
   return (
     <div className="pt-4 pb-20 flex flex-col h-screen">
+      <PremiumModal open={showPremiumModal} onClose={() => setShowPremiumModal(false)} />
+
       <div className="flex flex-wrap gap-2 mb-4">
         {periods.map(period => (
           <Badge
@@ -361,8 +374,12 @@ const Main = () => {
                 color={getColorForCategory(transaction.category)}
                 onDelete={() => handleDeleteTransaction(transaction.id)}
                 onEdit={() => {
-                  setSelectedTransaction(transaction);
-                  setActiveTab('edit');
+                  if (!isPremium) {
+                    setShowPremiumModal(true);
+                  } else {
+                    setSelectedTransaction(transaction);
+                    setActiveTab('edit');
+                  }
                 }}
                 hasAccess={isPremium}
               />
@@ -393,9 +410,8 @@ const Main = () => {
       </div>
 
       <button 
-        onClick={() => setActiveTab('add')} 
+        onClick={handleAddTransactionClick}
         className="fixed bottom-20 right-6 w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-pink-500 shadow-lg flex items-center justify-center"
-        disabled={!isPremium}
       >
         <PlusIcon className="h-6 w-6 text-white" />
       </button>
