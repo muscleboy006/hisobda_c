@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Crown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const PremiumPage = () => {
+  const navigate = useNavigate()
   const handleBack = () => {
+    navigate(-1)
     console.log('Навигация назад');
   };
   const [selectedPlan, setSelectedPlan] = useState('2months');
